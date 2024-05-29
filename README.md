@@ -70,10 +70,10 @@ For this sample we have included a server API service at `pages/api/start.tsx` t
    }
    ```
 
-# Author
-
-© Incode Technologies Inc. All rights reserved.
-
 3. Now that we have the Incode Web SDK loaded, initialize it to enable the SDK to start calling the different methods.
 
 4. To seamlessly integrate the Incode Web SDK into your application, follow the instructions outlined in the [How to use Web SDK](https://developer.incode.com/docs/tutorial-creating-an-identity-validation-app#capture-and-validate-an-id-card) guide. By adhering to these steps, you'll gain access to the data capture tools, allowing you to seamlessly integrate them into your application based on your preferred architecture strategy.
+
+# Author
+
+© Incode Technologies Inc. All rights reserved.
