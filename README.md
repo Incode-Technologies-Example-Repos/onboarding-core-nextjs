@@ -1,3 +1,27 @@
+## Running the project
+
+### Install
+
+To install execute the following command in the terminal:
+```bash
+npm install
+```
+
+### Setup
+Create your `.env.local` file based on the `env.example` file`.
+
+First, run the development server:
+
+```bash
+npm run dev
+```
+
+Open [https://localhost:3000](https://localhost:3000) with your browser to see the result.
+
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+
+This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+
 ## Integrating the Incode Web SDK with Next.js
 
 This guide provides step-by-step instructions for integrating the Incode Web SDK with Next.js.
@@ -11,6 +35,8 @@ This guide provides step-by-step instructions for integrating the Incode Web SDK
 ## Backend Server
 
 A backend server that will generate the url is needed for this sample, luckily for you we already have sample server for PHP, NodeJS, Python, PHP and Java and .NET, please reffer to our documentation on subject: [Quick Start Sample Server](https://developer.incode.com/docs/quick-start-servers)
+
+For this sample we have included a server API service at `pages/api/start.tsx` to let you run the sample without any extra requirements.
 
 
 ### Integration Steps
@@ -47,57 +73,3 @@ A backend server that will generate the url is needed for this sample, luckily f
 3. Now that we have the Incode Web SDK loaded, initialize it to enable the SDK to start calling the different methods.
 
 4. To seamlessly integrate the Incode Web SDK into your application, follow the instructions outlined in the [How to use Web SDK](https://developer.incode.com/docs/tutorial-creating-an-identity-validation-app#capture-and-validate-an-id-card) guide. By adhering to these steps, you'll gain access to the data capture tools, allowing you to seamlessly integrate them into your application based on your preferred architecture strategy.
-
-
-
-```typescript
-// UserConsent.tsx
-'use client';
-import Script from "next/script";
-import { useEffect, useRef } from "react";
-
-function UserConsent({ session, baseUrl }: UserConsentPropTypes) {
-    const containerRef = useRef<HTMLDivElement>(null);
-    const isMounted = useRef(false);
-    
-    let incode: any;
-
-    useEffect(() => {
-        if (!incode && window.OnBoarding) {
-            // Initialize the SDK 
-            incode = window.OnBoarding;
-            incode.create({
-                apiURL: baseUrl
-            });
-        }
-        
-        if (incode && isMounted.current) {
-            return;
-        }
-        
-        incode.renderUserConsent(containerRef.current, {
-            onSuccess: () => { captureAndContinue() },
-            session: session,
-        });
-        isMounted.current = true;
-
-    }, [session]);
-
-}
-
-export { UserConsent };
-```
-
-## Running the project
-
-First, run the development server:
-
-```bash
-npm run dev
-```
-
-Open [https://localhost:3000](https://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.

@@ -2,10 +2,11 @@
 import { useEffect, useRef } from "react"
 
 
-function UserConsent({ session, baseUrl }:UserConsentPropTypes) {
+function Incode({ session, baseUrl }:UserConsentPropTypes) {
     const containerRef = useRef<HTMLDivElement>(null);
     const isMounted = useRef(false);
-    
+    let isOnboardingFinished = false;
+    console.log(session)  
     let incode: any; 
 
     useEffect(() => {
@@ -18,15 +19,6 @@ function UserConsent({ session, baseUrl }:UserConsentPropTypes) {
         
         if (incode && isMounted.current) {
             return;
-        }
-        
-        function captureAndContinue() {
-            // Now that the user consented, we can ask for this data
-            
-            // Optional but valuable for fraud prevention, hurts conversion
-            // incode.sendFingerprint(session);
-            // incode.sendGeolocation(session);
-            captureIdFrontSide();
         }
 
         function captureIdFrontSide() {
@@ -43,13 +35,13 @@ function UserConsent({ session, baseUrl }:UserConsentPropTypes) {
             incode.renderCamera("back", containerRef.current, {
                 token: session,
                 numberOfTries: 3,
-                onSuccess: validateId,
+                onSuccess: processId,
                 onError: console.log,
                 showTutorial: true
             })
         }
 
-        function validateId() {
+        function processId() {
           return incode.processId({ token: session.token })
             .then(() => {
               captureSelfie();
@@ -80,18 +72,28 @@ function UserConsent({ session, baseUrl }:UserConsentPropTypes) {
               console.log(error);
             });
         }
-        // Render the initial module for your flow
-        incode.renderUserConsent(containerRef.current, {
-          onSuccess: () =>{ captureAndContinue() },
-          session: session,
-        });
+
+        function saveDeviceData() {
+          incode.sendGeolocation({ token: session.token });
+          incode.sendFingerprint({ token: session.token });
+          captureIdFrontSide();
+        }
+        
+        saveDeviceData();
 
         isMounted.current = true;
 
     }, [session]);
     
     return <>
+        {!session && (
+          <p>Starting session...</p>
+        )}
         <div ref={containerRef}></div>
+        {
+          !isOnboardingFinished && (
+            <p>Onboarding Finished.</p>
+        )}
     </>;
 }
 
@@ -106,5 +108,5 @@ type SessionType = {
   uuid?: string
 };
 
-export { UserConsent };
+export { Incode };
 export type { SessionType };
