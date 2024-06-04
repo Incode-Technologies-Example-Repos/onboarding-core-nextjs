@@ -1,13 +1,5 @@
 import { Incode } from "./incode/incode";
-import Script from "next/script";
 import startOnboardingSession from "./incode/session";
-
-// Declare the SDK object 
-declare global {
-  interface Window {
-      OnBoarding:any;
-  }
-}
 
 export default async function Home() {
   const session: any = await startOnboardingSession();
@@ -20,7 +12,8 @@ export default async function Home() {
            { <Incode
               session={session}
               baseUrl={baseUrl}>
-              </Incode>}
+              </Incode>
+            }
         </div>
       </main>
     </>

@@ -2,12 +2,10 @@
 import { useEffect, useRef } from "react";
 import { create } from "@incodetech/welcome";
 
-
 function Incode({ session, baseUrl }:UserConsentPropTypes) {
     const containerRef = useRef<HTMLDivElement>(null);
     const isMounted = useRef(false);
     let isOnboardingFinished = false;
-    console.log(session)  
     let incode: any; 
 
     useEffect(() => {
