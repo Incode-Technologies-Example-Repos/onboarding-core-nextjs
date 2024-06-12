@@ -1,21 +1,18 @@
 'use client';
-import { useEffect, useRef } from "react"
-
+import { useEffect, useRef } from "react";
+import { create } from "@incodetech/welcome";
 
 function Incode({ session, baseUrl }:UserConsentPropTypes) {
     const containerRef = useRef<HTMLDivElement>(null);
     const isMounted = useRef(false);
     let isOnboardingFinished = false;
-    console.log(session)  
     let incode: any; 
 
     useEffect(() => {
-        if (window && window.OnBoarding) {
-           // Initialize the SDK
-          incode = window.OnBoarding.create({
+        incode = create({
               apiURL: baseUrl
-          });
-        }
+        });
+        console.log(incode)
         
         if (incode && isMounted.current) {
             return;
@@ -41,6 +38,21 @@ function Incode({ session, baseUrl }:UserConsentPropTypes) {
             })
         }
 
+        function captureDocument() {
+          incode.renderCamera("document", containerRef.current, {
+              onSuccess: (evt: any) => {
+                console.log(evt);
+                finishOnboarding();
+              },
+              onError: console.log,
+              token: session,
+              showTutorial: true,
+              onLog: console.log,
+              numberOfTries: 3,
+              nativeCamera:true
+          });
+        }
+
         function processId() {
           return incode.processId({ token: session.token })
             .then(() => {
@@ -55,14 +67,13 @@ function Incode({ session, baseUrl }:UserConsentPropTypes) {
           incode.renderCamera("selfie", containerRef.current, {
             token: session,
             numberOfTries: 3,
-            onSuccess: finishOnboarding,
+            onSuccess: captureDocument,
             onError: console.log,
             showTutorial: true,
           });
         }
         
         function finishOnboarding() {
-            console.log("faceMatch")
           incode
             .getFinishStatus(null, { token: session.token })
             .then((response: any) => {
@@ -74,6 +85,7 @@ function Incode({ session, baseUrl }:UserConsentPropTypes) {
         }
 
         function saveDeviceData() {
+          console.log('incode:', incode)
           incode.sendGeolocation({ token: session.token });
           incode.sendFingerprint({ token: session.token });
           captureIdFrontSide();
