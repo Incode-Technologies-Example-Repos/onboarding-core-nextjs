@@ -10,7 +10,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@incodetech/welcome": "^1.70.0",
+    "@incodetech/welcome": "^1.75.1",
     "next": "14.2.2",
     "react": "^18",
     "react-dom": "^18"
