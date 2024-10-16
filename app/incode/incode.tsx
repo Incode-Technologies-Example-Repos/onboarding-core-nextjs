@@ -1,11 +1,12 @@
 'use client';
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 
 
 function Incode({ session, baseUrl }:UserConsentPropTypes) {
     const containerRef = useRef<HTMLDivElement>(null);
     const isMounted = useRef(false);
-    let isOnboardingFinished = false;
+    const [isOnboardingFinished, setIsOnboardingFinished] = useState(false);
+    const [isError, setIsError] = useState(false);
     console.log(session)  
     let incode: any; 
 
@@ -21,12 +22,16 @@ function Incode({ session, baseUrl }:UserConsentPropTypes) {
             return;
         }
 
+        function handleError(error:any){
+          setIsError(true);
+          console.log(error);
+        }
         function captureIdFrontSide() {
             incode.renderCamera("front", containerRef.current, {
                 token: session,
                 numberOfTries: 3,
                 onSuccess: captureIdBackSide,
-                onError: console.log,
+                onError: handleError,
                 showTutorial: true
             })
         }
@@ -36,7 +41,7 @@ function Incode({ session, baseUrl }:UserConsentPropTypes) {
                 token: session,
                 numberOfTries: 3,
                 onSuccess: processId,
-                onError: console.log,
+                onError: handleError,
                 showTutorial: true
             })
         }
@@ -47,7 +52,7 @@ function Incode({ session, baseUrl }:UserConsentPropTypes) {
               captureSelfie();
             })
             .catch((error: any) => {
-              console.log(error);
+              handleError(error);
             });
         }
         
@@ -56,7 +61,7 @@ function Incode({ session, baseUrl }:UserConsentPropTypes) {
             token: session,
             numberOfTries: 3,
             onSuccess: finishOnboarding,
-            onError: console.log,
+            onError: handleError,
             showTutorial: true,
           });
         }
@@ -66,10 +71,11 @@ function Incode({ session, baseUrl }:UserConsentPropTypes) {
           incode
             .getFinishStatus(null, { token: session.token })
             .then((response: any) => {
+              setIsOnboardingFinished(true);
               console.log(response);
             })
             .catch((error: any) => {
-              console.log(error);
+              handleError(error);
             });
         }
 
@@ -90,9 +96,12 @@ function Incode({ session, baseUrl }:UserConsentPropTypes) {
           <p>Starting session...</p>
         )}
         <div ref={containerRef}></div>
-        {
-          !isOnboardingFinished && (
-            <p>Onboarding Finished.</p>
+        
+        {isOnboardingFinished && (
+            <h1>Onboarding Finished.</h1>
+        )}
+        {isError && (
+            <h1>Error.</h1>
         )}
     </>;
 }

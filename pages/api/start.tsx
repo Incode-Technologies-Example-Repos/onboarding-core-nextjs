@@ -7,7 +7,7 @@ export default async function handler(
     const params = req.body ? JSON.parse(req.body) : {};
     const options = {
       countryCode: "ALL",
-      configurationId: process.env.INCODE_CLIENT_ID,
+      configurationId: process.env.INCODE_CONFIGURATION_ID,
       ...params
     }
 
@@ -20,7 +20,7 @@ export default async function handler(
             'Access-Control-Allow-Origin': '*',
             'Content-Type': 'application/json',
             'api-version': "1.0",
-            'x-api-key': process.env.INCODE_API_KEY + ''
+            'x-api-key': `${process.env.INCODE_API_KEY}`
         },
         redirect: 'follow', // manual, *follow, error
         referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
