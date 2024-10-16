@@ -7,7 +7,7 @@ export default async function handler(
     const params = req.body ? JSON.parse(req.body) : {};
     const options = {
       countryCode: "ALL",
-      configurationId: process.env.INCODE_CONFIG_ID,
+      configurationId: process.env.INCODE_CONFIGURATION_ID,
       ...params
     }
 
